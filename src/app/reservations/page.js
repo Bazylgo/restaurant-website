@@ -31,8 +31,8 @@ export default function Reservations() {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       <div className="container mx-auto px-4 py-16">
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 mb-2">
-            Make a <span className="text-primary italic">Reservation</span>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 mb-4">
+            Make a <span className="text-orange-600 italic">Reservation</span>
           </h1>
           <p className="text-gray-600 max-w-lg mx-auto">
             Reserve your table now and enjoy an unforgettable dining experience with us.
