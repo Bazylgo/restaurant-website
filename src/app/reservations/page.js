@@ -44,7 +44,7 @@ export default function Reservations() {
             {/* Image section - simplified with no overlay */}
             <div className="md:col-span-2 relative h-64 md:h-full">
               <Image
-                src="/Matyldinha.jpg"
+                src="/Chico.jpg"
                 alt="Restaurant ambiance"
                 className="w-full h-full object-cover"
                 width={800}

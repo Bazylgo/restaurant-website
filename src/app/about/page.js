@@ -45,7 +45,7 @@ export default function About() {
             viewport={{ once: true }}
           >
             <Image
-              src="/KendraIJa.jpg"
+              src="/JeDogiArmJa.jpg"
               alt="Our Restaurant Team"
               className="w-full object-cover" // Removed fixed height
               style={{ maxHeight: '500px' }} // Added max height
