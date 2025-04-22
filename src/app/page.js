@@ -102,7 +102,7 @@ export default function Home() {
           <div className="container mx-auto px-6 text-center">
             <h2 className="text-4xl font-bold mb-4">Ready to Dine With Us?</h2>
             <p className="text-lg text-gray-300 max-w-xl mx-auto mb-6">
-              Whether you're celebrating or just craving something special, we’ll make your experience exceptional.
+              Whether you&aposre celebrating or just craving something special, we’ll make your experience exceptional.
             </p>
             <Link
               href="/reservations"

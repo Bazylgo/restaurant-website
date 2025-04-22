@@ -35,7 +35,7 @@ export default function Reservations() {
       // This is just to notify that times have changed
       // The actual times are passed through the generateAvailableTimesForCalendar prop
     }
-  }, [availableTimes]);
+  }, [availableTimes, selectedDate]);
 
   const handleDateTimeSelect = (date, time = null) => {
     setSelectedDate(date);
