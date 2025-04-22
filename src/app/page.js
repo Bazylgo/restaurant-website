@@ -8,22 +8,6 @@ export default function Home() {
   return (
     <div className="font-sans text-gray-900 bg-white transition-colors duration-300 overflow-hidden">
 
-      {/* Navbar */}
-      <header className="fixed top-0 w-full z-50 bg-white bg-opacity-80 backdrop-blur-sm shadow-md">
-        <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold text-orange-600">
-            🍽 RestoVibe
-          </Link>
-          <div className="flex items-center space-x-6">
-            <nav className="hidden md:flex space-x-6">
-              <Link href="/menu" className="hover:text-orange-600">Menu</Link>
-              <Link href="/reservations" className="hover:text-orange-600">Reservations</Link>
-              <Link href="/about" className="hover:text-orange-600">About Us</Link>
-            </nav>
-          </div>
-        </div>
-      </header>
-
       <main className="bg-white text-gray-900">
         {/* Hero Section */}
         <section
