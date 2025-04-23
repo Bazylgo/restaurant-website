@@ -9,14 +9,14 @@ const pool = new Pool({
 export async function POST(request) {
   const body = await request.json();
 
-  const { full_name, email, phone, party_size, date, time, special_requests } = body;
+  const { name, email, phone, people, date, time, notes } = body;
 
   try {
     // 1. Save to database
     await pool.query(
       `INSERT INTO reservations (full_name, email, phone, party_size, date, time, special_requests)
        VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-      [full_name, email, phone, party_size, date, time, special_requests]
+      [name, email, phone, people, date, time, notes]
     );
 
     // 2. Add to Google Calendar
@@ -36,8 +36,8 @@ export async function POST(request) {
     const endDateTime = new Date(startDateTime.getTime() + 60 * 60 * 1000); // Adding 1 hour
 
     const event = {
-      summary: `Reservation for ${full_name}`,
-      description: `Phone: ${phone}, Email: ${email}, People: ${party_size}\nNotes: ${special_requests}`,
+      summary: `Reservation for ${name}`,
+      description: `Phone: ${phone}, Email: ${email}, People: ${people}\nNotes: ${notes}`,
       start: {
         dateTime: startDateTime.toISOString(), // ISO string format for Google Calendar
         timeZone: 'Europe/Warsaw',

@@ -21,9 +21,14 @@ export default function Reservations() {
   const [availableTimes, setAvailableTimes] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const blockedReservationTimes = ['2025-04-20', new Date(2025, 3, 25)]; // Example blocked dates
+  const [isFormValid, setIsFormValid] = useState(false);
 
 // Add this new effect to ensure the Calendar component always reflects current time availability
   useEffect(() => {
+
+    const { name, email, phone, date, time, people } = formData;
+    setIsFormValid(name && email && phone && date && time && people); // If all required fields are filled, set to true
+
     // This effect runs whenever availableTimes changes
     console.log('Available times updated in state:', availableTimes);
 
@@ -35,7 +40,7 @@ export default function Reservations() {
       // This is just to notify that times have changed
       // The actual times are passed through the generateAvailableTimesForCalendar prop
     }
-  }, [availableTimes, selectedDate]);
+  }, [availableTimes, selectedDate, formData]);
 
   const handleDateTimeSelect = (date, time = null) => {
     setSelectedDate(date);
@@ -138,7 +143,7 @@ export default function Reservations() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Basic form validation
@@ -152,11 +157,25 @@ export default function Reservations() {
       return;
     }
 
-    // Here you would typically handle form submission, like sending it to an API
-    alert(`Reservation confirmed for ${formData.name} on ${formData.date} at ${formData.time} for ${formData.people} people!`);
+    try {
+      const res = await fetch('/api/reservations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
 
-    // Reset error message
-    setErrorMessage('');
+      const result = await res.json();
+
+      if (result.success) {
+            alert(`Reservation confirmed for ${formData.name} on ${formData.date} at ${formData.time} for ${formData.people} people!`);
+            setErrorMessage('');
+          } else {
+            setErrorMessage(result.error || 'Something went wrong');
+          }
+    } catch (err) {
+      console.error(err);
+      setErrorMessage('Server error. Please try again.');
+    }
   };
 
   const handleUnavailableDaySelected = (message) => {
@@ -353,11 +372,11 @@ export default function Reservations() {
                 <div className="pt-4">
                   <button
                     type="submit"
-                    disabled={!selectedDate || !formData.time}
+                    disabled={!isFormValid}
                     className={`w-full md:w-auto px-8 py-4 bg-orange-600 text-white font-semibold rounded-lg shadow-md hover:bg-orange-500 hover:translate-y-0.5 transition duration-300 ease-in-out ${
-                      (!selectedDate || !formData.time) ? 'opacity-50 cursor-not-allowed' : ''
+                      (!isFormValid) ? 'opacity-50 cursor-not-allowed' : ''
                     }`}
-                    aria-disabled={!selectedDate || !formData.time}
+                    aria-disabled={!isFormValid}
                   >
                     Confirm Reservation
                   </button>
