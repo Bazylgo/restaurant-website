@@ -50,6 +50,12 @@ export default function Home() {
               Rooted in tradition and elevated with modern flair, our dishes are handcrafted with the finest local ingredients.
               We believe in creating moments as memorable as our meals.
             </p>
+            <Link
+              href="/about"
+              className="inline-block px-8 py-3 rounded-full text-lg font-medium bg-orange-600 text-white hover:bg-orange-500 transition-shadow shadow-lg hover:shadow-xl"
+            >
+              See our story!
+            </Link>
           </div>
         </motion.section>
 
@@ -86,7 +92,7 @@ export default function Home() {
           <div className="container mx-auto px-6 text-center">
             <h2 className="text-4xl font-bold mb-4">Ready to Dine With Us?</h2>
             <p className="text-lg text-gray-300 max-w-xl mx-auto mb-6">
-              Whether you&aposre celebrating or just craving something special, we’ll make your experience exceptional.
+              Whether you are celebrating or just craving something special, we’ll make your experience exceptional.
             </p>
             <Link
               href="/reservations"
