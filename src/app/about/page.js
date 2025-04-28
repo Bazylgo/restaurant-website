@@ -63,7 +63,7 @@ export default function About() {
           >
             <h2 className="text-2xl font-semibold text-gray-800">Our Philosophy</h2>
             <p className="text-lg text-gray-700 leading-relaxed">
-              At RestoVibe, we believe that dining is more than just eating; it&aposs an experience. We are dedicated to using the freshest, locally sourced ingredients to craft dishes that are both innovative and comforting. Our goal is to create a warm and inviting atmosphere where every guest feels like part of our family.
+              At RestoVibe, we believe that dining is more than just eating; it is an experience. We are dedicated to using the freshest, locally sourced ingredients to craft dishes that are both innovative and comforting. Our goal is to create a warm and inviting atmosphere where every guest feels like part of our family.
             </p>
             <div className="flex items-center space-x-4">
               <FaHistory className="text-orange-600 text-xl" />

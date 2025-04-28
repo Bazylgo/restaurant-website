@@ -41,5 +41,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# database flyway
-flyway/load-env.ps1
+# Prisma
+src/generated
+/prisma/migrations

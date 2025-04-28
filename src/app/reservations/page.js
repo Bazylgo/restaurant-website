@@ -5,8 +5,21 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Calendar from './Calendar'; // Assuming Calendar.js is in the same directory
 import { format } from 'date-fns';
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function Reservations() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  // If not authenticated, redirect to login
+  useEffect(() => {
+    if (status === "loading") return; // Don't redirect while checking session
+    if (!session) {
+      router.replace('/auth/signin');
+    }
+  }, [session, status, router]);
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -63,7 +76,7 @@ export default function Reservations() {
     calculateAvailableTimes(date, partySize);
   };
 
-    const handleInputChange = (e) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
 
     // First update the form data with the new value
@@ -167,11 +180,11 @@ export default function Reservations() {
       const result = await res.json();
 
       if (result.success) {
-            alert(`Reservation confirmed for ${formData.name} on ${formData.date} at ${formData.time} for ${formData.people} people!`);
-            setErrorMessage('');
-          } else {
-            setErrorMessage(result.error || 'Something went wrong');
-          }
+		alert(`Reservation confirmed for ${formData.name} on ${formData.date} at ${formData.time} for ${formData.people} people!`);
+		setErrorMessage('');
+	  } else {
+		setErrorMessage(result.error || 'Something went wrong');
+	  }
     } catch (err) {
       console.error(err);
       setErrorMessage('Server error. Please try again.');
@@ -204,6 +217,10 @@ export default function Reservations() {
     console.log('Calendar requesting times for non-selected date:', formattedDay);
     return ['17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00'];
   };
+
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
