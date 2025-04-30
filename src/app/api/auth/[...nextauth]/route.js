@@ -12,6 +12,8 @@ export const authOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      authorizationUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
+      callbackUrl: `${process.env.NEXTAUTH_URL}/api/auth/callback/google`,  // Ensure this is correct
     }),
     EmailProvider({
       async sendVerificationRequest({ identifier: email, url, provider }) {
@@ -24,11 +26,11 @@ export const authOptions = {
         }
 
         // Use environment variables for production email
-        const transport = process.env.NODE_ENV === 'development'
+        const transport = process.env.NODE_ENV === 'production'
           ? nodemailer.createTransport({
               host: process.env.EMAIL_SERVER_HOST,
               port: process.env.EMAIL_SERVER_PORT,
-              secure: process.env.EMAIL_SERVER_SECURE,
+              secure: process.env.EMAIL_SERVER_SECURE === 'true',
               auth: {
                 user: process.env.EMAIL_SERVER_USER,
                 pass: process.env.EMAIL_SERVER_PASSWORD,
