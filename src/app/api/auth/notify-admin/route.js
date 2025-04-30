@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
-import { PrismaClient } from "../../../../generated/prisma";
+import prisma from '@/lib/prisma';
 import crypto from 'crypto';
-
-const prisma = new PrismaClient();
 
 function generateAccessToken(email) {
   const hmac = crypto.createHmac('sha256', process.env.NEXTAUTH_SECRET);
@@ -33,7 +31,7 @@ export async function POST(req) {
     const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_SERVER_HOST,
       port: process.env.EMAIL_SERVER_PORT,
-      secure: process.env.EMAIL_SERVER_SECURE === 'true',
+      secure: process.env.EMAIL_SERVER_SECURE,
       auth: {
         user: process.env.EMAIL_SERVER_USER,
         pass: process.env.EMAIL_SERVER_PASSWORD,

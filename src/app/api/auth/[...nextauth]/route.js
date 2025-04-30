@@ -2,11 +2,9 @@ import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import EmailProvider from "next-auth/providers/email";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { PrismaClient } from "../../../../generated/prisma";
+import prisma from '@/lib/prisma';
 import nodemailer from "nodemailer";
 import { isEmailAllowed } from "../../../utils/auth"; // Import the utility function
-
-const prisma = new PrismaClient();
 
 export const authOptions = {
   adapter: PrismaAdapter(prisma),
@@ -30,7 +28,7 @@ export const authOptions = {
           ? nodemailer.createTransport({
               host: process.env.EMAIL_SERVER_HOST,
               port: process.env.EMAIL_SERVER_PORT,
-              secure: process.env.EMAIL_SERVER_SECURE === 'true',
+              secure: process.env.EMAIL_SERVER_SECURE,
               auth: {
                 user: process.env.EMAIL_SERVER_USER,
                 pass: process.env.EMAIL_SERVER_PASSWORD,

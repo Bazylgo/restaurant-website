@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from "../../../../generated/prisma";
+import prisma from '@/lib/prisma';
 import crypto from 'crypto';
-
-const prisma = new PrismaClient();
 
 function isValidToken(email, token) {
   const hmac = crypto.createHmac('sha256', process.env.NEXTAUTH_SECRET);

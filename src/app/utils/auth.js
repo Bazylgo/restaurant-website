@@ -1,7 +1,5 @@
 // utils/auth.js
-import { PrismaClient } from "../../generated/prisma";
-
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
 
 async function isEmailAllowed(email) {
   const allowedEmail = await prisma.allowedEmail.findUnique({
