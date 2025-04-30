@@ -47,7 +47,16 @@ export default function SignInPage() {
       const { allowed } = await validationResponse.json();
 
       if (!allowed) {
-        toast.error("Unauthorized email. Please contact the administrator for access.");
+        // Notify the user
+        toast.success("Your email and details have been forwarded to the administrator. You’ll be granted access soon.");
+
+        // Send request to notify admin
+        await fetch("/api/auth/notify-admin", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }), // Add more fields if needed (e.g., name)
+        });
+
         setIsLoading(false);
         router.push("/auth/error?error=UnauthorizedEmail");
         return;

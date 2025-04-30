@@ -75,6 +75,14 @@ model VerificationToken {
 model AllowedEmail {
   id        String   @id @default(cuid())
   email     String   @unique
+  name      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model PendingUserRequest {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
 }

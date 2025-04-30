@@ -25,23 +25,22 @@ export const authOptions = {
           return;
         }
 
-        // Create a test account for development (this is what you had originally)
-        const testAccount = await nodemailer.createTestAccount();
-
-        // Create a transporter with the test account
-        const transport = nodemailer.createTransport({
-          host: testAccount.smtp.host,
-          port: testAccount.smtp.port,
-          secure: testAccount.smtp.secure,
-          auth: {
-            user: testAccount.user,
-            pass: testAccount.pass,
-          },
-        });
+        // Use environment variables for production email
+        const transport = process.env.NODE_ENV === 'development'
+          ? nodemailer.createTransport({
+              host: process.env.EMAIL_SERVER_HOST,
+              port: process.env.EMAIL_SERVER_PORT,
+              secure: process.env.EMAIL_SERVER_SECURE === 'true',
+              auth: {
+                user: process.env.EMAIL_SERVER_USER,
+                pass: process.env.EMAIL_SERVER_PASSWORD,
+              },
+            })
+          : await createTestTransport();
 
         // Send the email with your existing template
         const info = await transport.sendMail({
-          from: '"RestoVibe" <noreply@restovibe.com>',
+          from: process.env.EMAIL_FROM || '"Gabriel" <noreply@doggie-oasis.com>',
           to: email,
           subject: "Sign in to RestoVibe",
           text: `Click this link to sign in: ${url}`,
@@ -59,8 +58,9 @@ export const authOptions = {
           `,
         });
 
-        // Log the URL where you can preview the email (this is important for testing)
-        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        if (process.env.NODE_ENV !== 'production') {
+          console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        }
       }
     }),
   ],
@@ -127,6 +127,20 @@ export const authOptions = {
   // Debug mode based on environment
   debug: process.env.NODE_ENV === 'development',
 };
+
+// Helper function to create test transport for development
+async function createTestTransport() {
+  const testAccount = await nodemailer.createTestAccount();
+  return nodemailer.createTransport({
+    host: testAccount.smtp.host,
+    port: testAccount.smtp.port,
+    secure: testAccount.smtp.secure,
+    auth: {
+      user: testAccount.user,
+      pass: testAccount.pass,
+    },
+  });
+}
 
 const handler = NextAuth(authOptions);
 

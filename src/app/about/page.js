@@ -138,21 +138,21 @@ export default function About() {
               <ul className="space-y-3">
                 <li className="flex items-center space-x-3 text-gray-700">
                   <FaMapMarkerAlt className="text-orange-600" />
-                  <span>123 Main Street, Anytown, USA 12345</span>
+                  <span>Madalińskiego 67/11, 02-549, Warsaw</span>
                 </li>
                 <li className="flex items-center space-x-3 text-gray-700">
                   <FaPhone className="text-orange-600" />
-                  <span>(123) 456-7890</span>
+                  <span>+48 577 207 641</span>
                 </li>
                 <li className="flex items-center space-x-3 text-gray-700">
                   <FaEnvelope className="text-orange-600" />
-                  <span>info@restovibe.com</span>
+                  <span>felixgabrielvinte@gmail.com</span>
                 </li>
               </ul>
             </div>
             <div>
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d387190.2792014868!2d-74.25908993344693!3d40.69767006478206!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY!5e0!3m2!1sen!2sus!4v1631753362049!5m2!1sen!2sus" // Replace with your actual map URL
+                src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d2784.2021708422044!2d21.008194584024142!3d52.20252423490347!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2s!5e0!3m2!1sen!2spl!4v1745923871967!5m2!1sen!2spl" // Replace with your actual map URL
                 width="100%"
                 height="250"
                 style={{ border: 0, borderRadius: '0.75rem' }}
