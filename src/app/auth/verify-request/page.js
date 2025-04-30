@@ -19,7 +19,7 @@ export default function VerifyRequest() {
 
         <div className="pt-8">
           <p className="text-sm text-gray-500">
-            If you don't see the email, please check your spam folder. If you still don't see it, try requesting
+            If you do not see the email, please check your spam folder. If you still do not see it, try requesting
             another verification email or contact the administrator.
           </p>
           <div className="mt-6">

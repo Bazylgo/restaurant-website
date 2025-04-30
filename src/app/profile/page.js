@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "../hooks/useAuth";
+import Image from 'next/image';
 
 export default function ProfilePage() {
   const { session, loading, authenticated } = useAuth({ required: true });
@@ -16,11 +17,13 @@ export default function ProfilePage() {
       <div>
         <p>Email: {session.user.email}</p>
         {session.user.name && <p>Name: {session.user.name}</p>}
-        {session.user.image && (
-          <img
+        {session.user?.image && (
+          <Image
             src={session.user.image}
             alt="Profile"
-            className="w-16 h-16 rounded-full mt-4"
+            className="w-16 h-16 rounded-full mt-4 object-cover" // Removed fixed height
+            width={64}
+            height={64}
           />
         )}
       </div>
