@@ -127,3 +127,60 @@ If you're using GitHub Actions or another CI system, add the following to your w
     GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
     GOOGLE_CALENDAR_ID: ${{ secrets.GOOGLE_CALENDAR_ID }}
 ```
+
+
+Overview of Created Files
+
+Authentication Service (google-auth.service.js)
+
+Separates authentication logic from your route handler
+Supports both OAuth2 and Service Account authentication
+Better error handling for auth-related issues
+
+
+Unit Tests for Auth Service (google-auth.service.test.js)
+
+Tests proper initialization of OAuth clients
+Verifies error handling for missing credentials
+Tests both authentication methods
+
+
+Route Handler Tests (reservations-auth.test.js)
+
+Tests specific authentication aspects of your API route
+Verifies proper handling of auth errors like invalid_grant
+Ensures OAuth setup is correct
+
+
+Integration Tests (integration-test.js)
+
+End-to-end testing of the reservation flow
+Uses mock HTTP requests and responses
+Tests successful and error scenarios
+
+
+Testing Utilities (auth-mock-helper.js)
+
+Helper functions for simulating Google Calendar responses
+Tools for mocking auth errors
+Environment variable management
+
+
+Jest Configuration (jest.config.js and jest.setup.js)
+
+Properly configured test environment
+Module path mapping for cleaner imports
+
+
+Updated Route Handler (updated-route.js)
+
+Refactored version of your original code
+Uses the new auth service
+Better error handling for auth failures
+
+
+Installation Guide (installation-guide.md)
+
+Step-by-step instructions for implementing these tests
+Environment setup details
+Commands for running tests

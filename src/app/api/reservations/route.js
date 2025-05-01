@@ -1,6 +1,6 @@
 import { Pool } from 'pg';
-import { google } from 'googleapis';
 import { NextResponse } from 'next/server';
+import { createCalendarClient } from '@/services/google-auth.service';
 
 const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
@@ -19,17 +19,8 @@ export async function POST(request) {
       [name, email, phone, people, date, time, notes]
     );
 
-    // 2. Add to Google Calendar
-    const auth = new google.auth.OAuth2(
-      process.env.GOOGLE_CLIENT_ID,
-      process.env.GOOGLE_CLIENT_SECRET
-    );
-
-    auth.setCredentials({
-      refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
-    });
-
-    const calendar = google.calendar({ version: 'v3', auth });
+    // 2. Add to Google Calendar using the refactored auth service
+    const calendar = createCalendarClient();
 
     // Combine date and time into a single ISO format string
     const startDateTime = new Date(`${date}T${time}:00`); // Create a Date object
@@ -56,6 +47,17 @@ export async function POST(request) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Reservation Error:', error);
-    return NextResponse.json({ error: `Failed to save reservation: ${error.message}` }, { status: 500 });
+
+    // More detailed error handling
+    let errorMessage = `Failed to save reservation: ${error.message}`;
+    let statusCode = 500;
+
+    if (error.message.includes('invalid_grant')) {
+      errorMessage = 'Google Calendar authentication failed. Please contact the administrator.';
+    } else if (!process.env.GOOGLE_CALENDAR_ID) {
+      errorMessage = 'Missing Google Calendar configuration. Please contact the administrator.';
+    }
+
+    return NextResponse.json({ error: errorMessage }, { status: statusCode });
   }
 }
