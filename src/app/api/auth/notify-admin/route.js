@@ -1,3 +1,4 @@
+//notify-admin/route.js
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 import prisma from '@/lib/prisma';
@@ -28,17 +29,33 @@ export async function POST(req) {
     const token = generateAccessToken(email);
     const grantLink = `${process.env.NEXTAUTH_URL}/api/admin/grant-access?email=${encodeURIComponent(email)}&token=${token}`;
 
-    const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_SERVER_HOST,
-      port: process.env.EMAIL_SERVER_PORT,
-      secure: process.env.EMAIL_SERVER_SECURE === 'true',
-      auth: {
-        user: process.env.EMAIL_SERVER_USER,
-        pass: process.env.EMAIL_SERVER_PASSWORD,
-      },
-    });
+    // Create transport for email
+    let transport;
+    if (process.env.NODE_ENV === 'production') {
+      transport = nodemailer.createTransport({
+        host: process.env.EMAIL_SERVER_HOST,
+        port: process.env.EMAIL_SERVER_PORT,
+        secure: process.env.EMAIL_SERVER_SECURE === 'true',
+        auth: {
+          user: process.env.EMAIL_SERVER_USER,
+          pass: process.env.EMAIL_SERVER_PASSWORD,
+        },
+      });
+    } else {
+      // For development/testing
+      const testAccount = await nodemailer.createTestAccount();
+      transport = nodemailer.createTransport({
+        host: testAccount.smtp.host,
+        port: testAccount.smtp.port,
+        secure: testAccount.smtp.secure,
+        auth: {
+          user: testAccount.user,
+          pass: testAccount.pass,
+        },
+      });
+    }
 
-    await transporter.sendMail({
+    const info = await transport.sendMail({
       from: '"Doggie-oasis Access Request" <no-reply@doggie-oasis.com>',
       to: process.env.EMAIL_SERVER_USER,
       subject: 'User Requested Access',
@@ -52,9 +69,13 @@ export async function POST(req) {
       `,
     });
 
+    if (process.env.NODE_ENV !== 'production') {
+      console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    }
+
     return NextResponse.json({ success: true });
   } catch (err) {
-    console.error(err);
+    console.error('Notify admin error:', err);
     return NextResponse.json({ error: 'Failed to save request or send email' }, { status: 500 });
   }
 }

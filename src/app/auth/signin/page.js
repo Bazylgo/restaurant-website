@@ -31,6 +31,7 @@ export default function SignInPage() {
   const handleEmailSignIn = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    const loadingToast = toast.loading("Checking your email...");
 
     try {
       // 1. Validate the email against the API route
@@ -48,13 +49,14 @@ export default function SignInPage() {
 
       if (!allowed) {
         // Notify the user
-        toast.success("Your email and details have been forwarded to the administrator. You’ll be granted access soon.");
+        toast.success("Your email and details have been forwarded to the administrator. You'll be granted access soon.",
+          { id: loadingToast });
 
         // Send request to notify admin
         await fetch("/api/auth/notify-admin", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email }), // Add more fields if needed (e.g., name)
+          body: JSON.stringify({ email }),
         });
 
         setIsLoading(false);
@@ -62,22 +64,40 @@ export default function SignInPage() {
         return;
       }
 
-      // 2. If email is valid, proceed with signIn
-      const loadingToast = toast.loading("Sending connection link... 📩");
-      const res = await signIn("email", {
+      // 2. If email is in the allowed list, try direct login
+      toast.loading("Signing you in...", { id: loadingToast });
+
+      // Use the email-login provider ID to match the ID in route.js
+      const result = await signIn("email-login", {
         email,
         redirect: false,
       });
 
-      if (res?.ok) {
-        toast.success('Check your email for the link!', { id: loadingToast });
+      if (result?.error) {
+        // If direct login fails, fall back to email link
+        toast.loading("Sending connection link...", { id: loadingToast });
+
+        const emailResult = await signIn("email", {
+          email,
+          redirect: false,
+        });
+
+        if (emailResult?.error) {
+          throw new Error(emailResult.error || 'Failed to send verification email');
+        }
+
+        toast.success("Check your email for the login link!", { id: loadingToast });
         router.push("/auth/verify-request");
       } else {
-        throw new Error('Failed to send connection link.');
+        // Direct login successful
+        toast.success("Successfully signed in!", { id: loadingToast });
+
+        // Force a full page reload to ensure session is recognized
+        window.location.href = "/";
       }
     } catch (error) {
-      console.error("Error signing in with email:", error);
-      toast.error("Failed to sign in. Please try again.", { id: loadingToast });
+      console.error("Error signing in:", error);
+      toast.error(`Sign in failed: ${error.message}`, { id: loadingToast });
     } finally {
       setIsLoading(false);
     }
@@ -86,7 +106,6 @@ export default function SignInPage() {
   const handleSocialSignIn = async (provider) => {
     try {
       await signIn(provider, { callbackUrl: "/" });
-
     } catch (error) {
       console.error("Error signing in with provider:", error);
       toast.error("Failed to sign in with provider.");

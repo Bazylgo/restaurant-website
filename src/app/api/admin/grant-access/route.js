@@ -1,3 +1,4 @@
+//grant-access/route.js
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import crypto from 'crypto';
@@ -47,12 +48,26 @@ export async function GET(req) {
       <html>
         <body style="font-family: sans-serif; text-align: center; padding: 40px;">
           <h2>Access Granted!</h2>
-          <p>${email} has been added to the allowed list. Please try signing in again :) </p>
+          <p>${email} has been added to the allowed list. They can now sign in.</p>
+          <p><small>This action was completed at ${new Date().toLocaleString()}</small></p>
         </body>
       </html>
     `, { headers: { "Content-Type": "text/html" } });
   } catch (err) {
-    console.error(err);
-    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+    console.error('Grant access error:', err);
+
+    // Check if it's a duplicate key error (user already added to allowed list)
+    if (err.code === 'P2002') {
+      return new NextResponse(`
+        <html>
+          <body style="font-family: sans-serif; text-align: center; padding: 40px;">
+            <h2>Already Granted!</h2>
+            <p>${email} is already in the allowed list.</p>
+          </body>
+        </html>
+      `, { headers: { "Content-Type": "text/html" } });
+    }
+
+    return NextResponse.json({ error: 'Server error', details: err.message }, { status: 500 });
   }
 }
